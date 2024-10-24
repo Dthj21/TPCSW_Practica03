@@ -5,71 +5,102 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 public class DAOEmpleado implements IDAOGeneral<Empleado, Long> {
-    
-    @Override
-    public boolean save(Empleado pojo){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction t = session.beginTransaction();
-        session.save(pojo);
-        t.commit();
-        return true;
-    }
-    
-    /*
-    @Override
-    public boolean delete(Empleado pojo){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction t = session.beginTransaction();
-        session.delete(pojo.getClave());
-        t.commit();
-        return true;
-    }
-    
-    @Override
-    public boolean update(Empleado pojo){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction t = session.beginTransaction();
-        session.update(pojo);
-        t.commit();
-        return true;
-    }
-    
-    @Override
-    public List<Empleado> findAll(){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction t = session.beginTransaction();
-        List<Empleado> empleados = session.createQuery("from Empleado", Empleado.class).list();
-        t.commit();
-        return empleados;
-    }
-    
-    @Override
-    public Empleado finById(Empleado pojo){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction t = session.beginTransaction();
-        Empleado empleado = session.get(Empleado.class, id);
-        t.commit();
-        return empleado;
-    }
-*/
 
     @Override
-    public boolean delete(Long pojo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean save(Empleado pojo) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = session.beginTransaction();
+        try {
+            session.save(pojo);
+            t.commit();
+            return true;
+        } catch (Exception e) {
+            if (t.isActive()) {
+                t.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = session.beginTransaction();
+        try {
+            Empleado empleado = session.get(Empleado.class, id);
+            if (empleado != null) {
+                session.delete(empleado);
+                t.commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            if (t.isActive()) {
+                t.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean update(Empleado pojo, Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = session.beginTransaction();
+        try {
+            session.update(pojo);
+            t.commit();
+            return true;
+        } catch (Exception e) {
+            if (t.isActive()) {
+                t.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public List<Empleado> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = session.beginTransaction();
+        try {
+            List<Empleado> empleados = session.createQuery("from Empleado", Empleado.class).list();
+            t.commit();
+            return empleados;
+        } catch (Exception e) {
+            if (t.isActive()) {
+                t.rollback();
+            }
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public Empleado findById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = session.beginTransaction();
+        try {
+            Empleado empleado = session.get(Empleado.class, id);
+            t.commit();
+            return empleado;
+        } catch (Exception e) {
+            if (t.isActive()) {
+                t.rollback();
+            }
+            e.printStackTrace();
+            return null;
+        }
     }
+
+    public List<Departamento> findAllDepartamentos() {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = session.beginTransaction();
+        List<Departamento> departamentos = session.createQuery("from Departamento", Departamento.class).list();
+        t.commit();
+        return departamentos;
+    }
+
 }
