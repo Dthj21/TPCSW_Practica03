@@ -64,4 +64,7 @@ public class DAODepartamento implements IDAOGeneral<Departamento, Long> {
         return departamento;
     } 
     
-}
+   
+
+        }
+ 
